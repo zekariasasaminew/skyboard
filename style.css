@@ -219,7 +219,7 @@ body::before {
   z-index: 1;
 }
 
-/* Leaflet dark map filter */
+/* Leaflet dark map filter — hue-rotate gives the map a blue night-sky tone */
 .leaflet-tile { filter: brightness(0.7) saturate(0.8) hue-rotate(200deg); }
 .leaflet-container { background: var(--bg-deep); }
 

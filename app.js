@@ -10,11 +10,13 @@
 'use strict';
 
 // ─── Constants ──────────────────────────────────────────────
-const OPENSKY_URL      = 'https://opensky-network.org/api/states/all';
-const REFRESH_INTERVAL = 15;          // seconds
-const MAX_PLANES       = 5000;        // cap for performance
-const NEAR_ME_DEGREES  = 2;           // ~200 km bounding box radius
-const EARTH_RADIUS_KM  = 6371;
+const OPENSKY_URL             = 'https://opensky-network.org/api/states/all';
+const REFRESH_INTERVAL_SECONDS = 15;   // seconds between auto-refresh
+const MAX_PLANES               = 5000; // cap for performance
+const NEAR_ME_DEGREES          = 2;    // ~200 km bounding box radius
+const EARTH_RADIUS_KM          = 6371;
+const API_TIMEOUT_MS           = 20000; // 20 s fetch timeout
+const SEARCH_DEBOUNCE_MS       = 350;   // ms to wait before triggering search
 
 // OpenSky states array indices
 const IDX = {
@@ -112,7 +114,7 @@ let map;
 let markersLayer;
 let allFlights    = [];   // raw state arrays from last fetch
 let markerMap     = {};   // icao24 → Leaflet marker
-let countdownVal  = REFRESH_INTERVAL;
+let countdownVal  = REFRESH_INTERVAL_SECONDS;
 let countdownTimer;
 let refreshTimer;
 let searchDebounce;
@@ -155,7 +157,7 @@ function initMap() {
 
 // ─── Airplane SVG icon factory ───────────────────────────────
 function planeIcon(heading, isHighlighted) {
-  const deg     = (heading == null) ? 0 : heading;
+  const deg     = (heading === null || heading === undefined) ? 0 : heading;
   const color   = isHighlighted ? '#ff6b6b' : '#00d4ff';
   const outline = isHighlighted ? '#fff'    : 'rgba(0,0,0,0.6)';
   const size    = isHighlighted ? 20        : 14;
@@ -371,7 +373,7 @@ async function fetchFlights(bbox) {
   }
 
   const controller = new AbortController();
-  const timeout    = setTimeout(() => controller.abort(), 20000);
+  const timeout    = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
 
   try {
     const res  = await fetch(url, { signal: controller.signal });
@@ -426,7 +428,7 @@ async function refresh(showLoading) {
 // ─── Countdown Timer ─────────────────────────────────────────
 function startCountdown() {
   clearInterval(countdownTimer);
-  countdownVal = REFRESH_INTERVAL;
+  countdownVal = REFRESH_INTERVAL_SECONDS;
   countdownEl.textContent = countdownVal + 's';
 
   countdownTimer = setInterval(() => {
@@ -434,7 +436,7 @@ function startCountdown() {
     countdownEl.textContent = countdownVal + 's';
     if (countdownVal <= 0) {
       refresh(false);    // Data refreshes every 15 seconds
-      countdownVal = REFRESH_INTERVAL;
+      countdownVal = REFRESH_INTERVAL_SECONDS;
     }
   }, 1000);
 }
@@ -634,7 +636,7 @@ lbToggle.addEventListener('click', () => {
 
 // ─── Event Listeners ─────────────────────────────────────────
 refreshBtn.addEventListener('click', () => {
-  countdownVal = REFRESH_INTERVAL;
+  countdownVal = REFRESH_INTERVAL_SECONDS;
   refresh(false);
 });
 
@@ -647,7 +649,7 @@ nearmeBtn.addEventListener('click', findNearMe);
 
 searchInput.addEventListener('input', () => {
   clearTimeout(searchDebounce);
-  searchDebounce = setTimeout(() => doSearch(searchInput.value), 350);
+  searchDebounce = setTimeout(() => doSearch(searchInput.value), SEARCH_DEBOUNCE_MS);
 });
 
 document.getElementById('search-btn').addEventListener('click', () => {
