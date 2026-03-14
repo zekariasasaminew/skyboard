@@ -11,6 +11,9 @@
 
 > **Track thousands of real planes in real-time. No sign-up. No API key. Just open the file.**
 
+🌐 **[Live Demo → zekariasasaminew.github.io/skyboard](https://zekariasasaminew.github.io/skyboard)**
+
+![Deploy to GitHub Pages](https://github.com/zekariasasaminew/skyboard/actions/workflows/deploy.yml/badge.svg)
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
@@ -86,15 +89,23 @@ Real-time analytics computed from live OpenSky data:
 
 ## 🚀 How to Run
 
+### ☁️ Option 1 — Live on GitHub Pages (no download needed!)
+
+**[https://zekariasasaminew.github.io/skyboard](https://zekariasasaminew.github.io/skyboard)**
+
+Just open the link — works on desktop and mobile.
+
+### 💻 Option 2 — Run locally
+
 **No installation. No npm. No build step. Just:**
 
 ```bash
-# Option 1: Simply open in browser
+# Simply open in browser
 open index.html      # macOS
 start index.html     # Windows
 xdg-open index.html  # Linux
 
-# Option 2: Serve locally (optional, for stricter browsers)
+# Or serve locally (optional, for stricter browsers)
 python3 -m http.server 8080
 # then visit http://localhost:8080
 ```
