@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>✈️ SkyBoard — Live Flight Explorer</title>
+
+  <!-- Leaflet.js CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- App styles -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="app-header">
+    <div class="header-left">
+      <span class="logo">✈️ SkyBoard</span>
+      <span class="tagline">Live Flight Explorer</span>
+    </div>
+    <div class="header-center">
+      <div class="search-wrapper">
+        <input
+          id="search-input"
+          type="text"
+          placeholder="Search callsign e.g. BAW123…"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button id="search-btn" aria-label="Search">🔍</button>
+        <div id="search-result" class="search-result hidden"></div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="refresh-info">
+        <span id="aircraft-count" class="count-badge">— </span>
+        <span class="count-label">aircraft</span>
+        <span class="divider">|</span>
+        <span class="refresh-label">Refresh in</span>
+        <span id="countdown" class="countdown">15s</span>
+      </div>
+      <button id="refresh-btn" title="Refresh now">⟳</button>
+    </div>
+  </header>
+
+  <!-- ===== MAIN LAYOUT ===== -->
+  <main class="app-main">
+
+    <!-- ===== MAP ===== -->
+    <div id="map-container">
+      <div id="map"></div>
+
+      <!-- Loading overlay -->
+      <div id="loading-overlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Fetching live flights…</p>
+      </div>
+
+      <!-- Error overlay -->
+      <div id="error-overlay" class="error-overlay hidden">
+        <div class="error-box glass-card">
+          <span class="error-icon">⚠️</span>
+          <p id="error-message">Failed to load flight data.</p>
+          <button id="retry-btn" class="btn-primary">Retry</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar">
+
+      <!-- Stats Panel -->
+      <section class="panel glass-card" id="stats-panel">
+        <h2 class="panel-title">📊 Live Stats</h2>
+        <div class="stat-item">
+          <span class="stat-icon">✈️</span>
+          <div class="stat-info">
+            <span class="stat-label">Total Airborne</span>
+            <span class="stat-value" id="stat-airborne">—</span>
+          </div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-icon">🚀</span>
+          <div class="stat-info">
+            <span class="stat-label">Fastest Plane</span>
+            <span class="stat-value" id="stat-fastest">—</span>
+          </div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-icon">🏔️</span>
+          <div class="stat-info">
+            <span class="stat-label">Highest Altitude</span>
+            <span class="stat-value" id="stat-highest">—</span>
+          </div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-icon">🌍</span>
+          <div class="stat-info">
+            <span class="stat-label">Top Country</span>
+            <span class="stat-value" id="stat-country">—</span>
+          </div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-icon">📉</span>
+          <div class="stat-info">
+            <span class="stat-label">Descending Now</span>
+            <span class="stat-value" id="stat-descending">—</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Near Me Panel -->
+      <section class="panel glass-card" id="nearme-panel">
+        <h2 class="panel-title">📡 What's Above Me?</h2>
+        <button id="nearme-btn" class="btn-primary full-width">
+          Planes Near Me 📡
+        </button>
+        <div id="nearme-result" class="nearme-result hidden"></div>
+      </section>
+
+      <!-- Country Leaderboard -->
+      <section class="panel glass-card" id="leaderboard-panel">
+        <div class="panel-title-row">
+          <h2 class="panel-title">🏆 Country Leaderboard</h2>
+          <button class="collapse-btn" id="lb-toggle" aria-expanded="true" aria-controls="lb-content">▲</button>
+        </div>
+        <div id="lb-content">
+          <ol id="leaderboard-list" class="leaderboard-list">
+            <li class="lb-placeholder">Loading…</li>
+          </ol>
+        </div>
+      </section>
+
+    </aside>
+  </main>
+
+  <!-- Leaflet.js -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- App logic -->
+  <script src="app.js"></script>
+</body>
+</html>
