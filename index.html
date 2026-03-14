@@ -7,8 +7,8 @@
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@300;600;800&display=swap" rel="stylesheet">
-  <!-- Leaflet.js CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- MapLibre GL JS CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.20.0/dist/maplibre-gl.css" />
   <!-- App styles -->
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -53,19 +53,31 @@
     <!-- ===== MAP ===== -->
     <div id="map-container">
       <div id="map"></div>
-      <canvas id="radar-sweep" style="position:absolute;inset:0;
-        pointer-events:none;z-index:399;opacity:0.06;"></canvas>
+      <canvas id="radar-sweep"></canvas>
 
       <!-- Altitude legend -->
-      <div id="alt-legend" style="position:absolute;bottom:10px;right:10px;z-index:500;
-        background:rgba(6,10,15,0.85);border:1px solid rgba(57,255,20,0.18);border-radius:8px;
-        padding:8px 12px;font-size:0.72rem;pointer-events:none;">
-        <div style="margin-bottom:4px;color:#d4f5e0;font-weight:600;">Altitude</div>
-        <div style="display:flex;align-items:center;gap:6px;margin:2px 0;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#00d4ff;"></span><span style="color:#d4f5e0;">Cruise &gt;10 km</span></div>
-        <div style="display:flex;align-items:center;gap:6px;margin:2px 0;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ffd700;"></span><span style="color:#d4f5e0;">Climb/Desc 3–10 km</span></div>
-        <div style="display:flex;align-items:center;gap:6px;margin:2px 0;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ff9f43;"></span><span style="color:#d4f5e0;">Approach 0.5–3 km</span></div>
-        <div style="display:flex;align-items:center;gap:6px;margin:2px 0;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ff6b6b;"></span><span style="color:#d4f5e0;">Low &lt;0.5 km</span></div>
-        <div style="display:flex;align-items:center;gap:6px;margin:2px 0;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#8aa8c0;"></span><span style="color:#d4f5e0;">Unknown</span></div>
+      <div id="alt-legend">
+        <div class="legend-title">Altitude</div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#00d4ff;"></span>
+          <span>Cruise &gt;10 km</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#ffd700;"></span>
+          <span>Climb/Desc 3–10 km</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#ff9f43;"></span>
+          <span>Approach 0.5–3 km</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#ff6b6b;"></span>
+          <span>Low &lt;0.5 km</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#8aa8c0;"></span>
+          <span>Unknown</span>
+        </div>
       </div>
 
       <!-- Loading overlay -->
@@ -100,7 +112,7 @@
           <div class="stat-info">
             <span class="stat-label">Total Airborne</span>
             <span class="stat-value" id="stat-airborne">—</span>
-            <svg id="sparkline" viewBox="0 0 260 28" style="width:100%;height:28px;margin-top:4px;opacity:0.7;"></svg>
+            <svg id="sparkline" viewBox="0 0 260 28"></svg>
           </div>
         </div>
         <div class="stat-item">
@@ -158,8 +170,8 @@
     </aside>
   </main>
 
-  <!-- Leaflet.js -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- MapLibre GL JS -->
+  <script src="https://unpkg.com/maplibre-gl@5.20.0/dist/maplibre-gl.js"></script>
   <!-- App logic -->
   <script src="app.js"></script>
 </body>

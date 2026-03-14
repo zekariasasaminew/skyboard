@@ -1,6 +1,6 @@
 /* ============================================================
    SkyBoard — Live Flight Explorer  |  style.css
-   Dark space/night-sky theme with glassmorphism cards
+   Dark ATC/radar aesthetic with green phosphor palette
    ============================================================ */
 
 /* ---------- CSS Variables ---------- */
@@ -144,6 +144,7 @@ body::before {
   border: none;
   color: var(--text);
   font-size: 0.875rem;
+  font-family: 'Share Tech Mono', monospace;
   outline: none;
 }
 
@@ -243,15 +244,51 @@ body::before {
   z-index: 1;
 }
 
-/* Leaflet dark map */
-.leaflet-container { background: var(--bg-deep); }
+/* Radar sweep canvas overlay */
+#radar-sweep {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.06;
+}
 
-/* Custom airplane icon wrapper */
-.plane-icon-wrapper {
+/* Altitude legend */
+#alt-legend {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 3;
+  background: rgba(6,10,15,0.85);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.72rem;
+  pointer-events: none;
+}
+
+.legend-title {
+  margin-bottom: 4px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.legend-item {
   display: flex;
   align-items: center;
-  justify-content: center;
-  transform-origin: center;
+  gap: 6px;
+  margin: 2px 0;
+  color: var(--text);
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 /* Loading overlay */
@@ -267,14 +304,6 @@ body::before {
   z-index: 500;
   font-size: 0.9rem;
   color: var(--text-muted);
-}
-
-.spinner {
-  width: 44px; height: 44px;
-  border: 3px solid rgba(0, 212, 255, 0.2);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
 }
 
 /* Error overlay */
@@ -370,6 +399,13 @@ body::before {
   font-weight: 600;
   color: var(--text);
   word-break: break-all;
+}
+
+#sparkline {
+  width: 100%;
+  height: 28px;
+  margin-top: 4px;
+  opacity: 0.7;
 }
 
 /* Near Me */
@@ -477,13 +513,14 @@ body::before {
 
 /* ---------- BUTTONS ---------- */
 .btn-primary {
-  background: linear-gradient(135deg, rgba(0,212,255,0.2), rgba(124,58,237,0.2));
+  background: linear-gradient(135deg, rgba(57,255,20,0.15), rgba(0,212,255,0.15));
   border: 1px solid var(--border);
   border-radius: 8px;
   color: var(--text);
   padding: 9px 16px;
   font-size: 0.85rem;
   font-weight: 600;
+  font-family: 'Share Tech Mono', monospace;
   cursor: pointer;
   transition: all 0.2s;
   display: inline-flex;
@@ -492,30 +529,43 @@ body::before {
   gap: 6px;
 }
 .btn-primary:hover {
-  background: linear-gradient(135deg, rgba(0,212,255,0.35), rgba(124,58,237,0.35));
+  background: linear-gradient(135deg, rgba(57,255,20,0.3), rgba(0,212,255,0.3));
   border-color: var(--accent);
   box-shadow: 0 0 16px var(--accent-glow);
 }
 .btn-primary:active { transform: scale(0.97); }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* ---------- LEAFLET POPUP STYLING ---------- */
-.leaflet-popup-content-wrapper {
+/* ---------- MapLibre POPUP STYLING ---------- */
+.maplibregl-popup-content {
   background: rgba(10, 14, 39, 0.95) !important;
-  border: 1px solid var(--border) !important;
+  border: 1px solid rgba(57,255,20,0.18) !important;
   border-radius: 10px !important;
-  color: var(--text) !important;
-  box-shadow: 0 8px 32px rgba(0, 212, 255, 0.15) !important;
+  color: #d4f5e0 !important;
+  box-shadow: 0 8px 32px rgba(57,255,20,0.12) !important;
+  padding: 14px 16px !important;
+  font-family: 'Share Tech Mono', monospace !important;
 }
 
-.leaflet-popup-tip { background: rgba(10, 14, 39, 0.95) !important; }
+.maplibregl-popup-tip {
+  border-top-color: rgba(10, 14, 39, 0.95) !important;
+}
 
-.leaflet-popup-close-button { color: var(--text-muted) !important; }
+.maplibregl-popup-close-button {
+  color: #8aa8c0 !important;
+  font-size: 1.2rem !important;
+  right: 6px !important;
+  top: 6px !important;
+}
+.maplibregl-popup-close-button:hover {
+  color: #d4f5e0 !important;
+  background: transparent !important;
+}
 
 .popup-callsign {
   font-size: 1rem;
   font-weight: 800;
-  color: var(--accent);
+  color: #39ff14;
   margin-bottom: 8px;
   display: flex;
   align-items: center;
@@ -530,20 +580,12 @@ body::before {
 }
 
 .popup-item { display: flex; flex-direction: column; gap: 1px; }
-.popup-label { color: var(--text-muted); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.5px; }
-.popup-value { color: var(--text); font-weight: 600; }
+.popup-label { color: #8aa8c0; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.popup-value { color: #d4f5e0; font-weight: 600; }
 
-.vrate-climb  { color: var(--success); }
-.vrate-desc   { color: var(--danger); }
-.vrate-level  { color: var(--text-muted); }
-
-/* Highlighted marker pulse */
-@keyframes markerPulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50%       { transform: scale(1.8); opacity: 0.5; }
-}
-
-.plane-highlight { animation: markerPulse 1s ease-in-out 3; }
+.vrate-climb  { color: #00ff9d; }
+.vrate-desc   { color: #ff4d6d; }
+.vrate-level  { color: #8aa8c0; }
 
 /* ---------- ANIMATIONS ---------- */
 @keyframes fadeSlideIn {
@@ -649,3 +691,13 @@ body::before {
 }
 .dot-anim { animation: dotBlink 1.2s step-end infinite; }
 @keyframes dotBlink { 33% { opacity:0; } 66% { opacity:0.5; } }
+
+/* ---------- MapLibre Attribution ---------- */
+.maplibregl-ctrl-attrib {
+  font-size: 0.65rem !important;
+  background: rgba(6,10,15,0.7) !important;
+  color: #8aa8c0 !important;
+}
+.maplibregl-ctrl-attrib a {
+  color: #8aa8c0 !important;
+}
