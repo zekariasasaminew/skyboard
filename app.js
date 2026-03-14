@@ -623,12 +623,12 @@ function updateLeaderboard(countryCounts) {
 
   const maxCount = top10[0][1];
   lbList.innerHTML = top10.map(function(entry, i) {
-    var country = entry[0];
-    var count = entry[1];
-    var flag    = COUNTRY_FLAGS[country] || '🌐';
-    var rank    = i + 1;
-    var rankCls = rank <= 3 ? 'top3' : '';
-    var barW    = Math.round((count / maxCount) * 100);
+    const country = entry[0];
+    const count = entry[1];
+    const flag    = COUNTRY_FLAGS[country] || '🌐';
+    const rank    = i + 1;
+    const rankCls = rank <= 3 ? 'top3' : '';
+    const barW    = Math.round((count / maxCount) * 100);
     return '<li class="lb-item">' +
       '<span class="lb-rank ' + rankCls + '">' + rank + '</span>' +
       '<span class="lb-flag">' + flag + '</span>' +
@@ -645,7 +645,7 @@ function updateLeaderboard(countryCounts) {
 
 // ─── Animate Number Helper ───────────────────────────────────
 function animateNumber(elId, newText) {
-  var el = $(elId);
+  const el = $(elId);
   if (!el) return;
   el.style.opacity = '0.4';
   requestAnimationFrame(function() {
@@ -653,7 +653,7 @@ function animateNumber(elId, newText) {
     el.style.transition = 'opacity 0.3s';
     el.style.opacity    = '1';
   });
-  var statItem = el.closest('.stat-item');
+  const statItem = el.closest('.stat-item');
   if (statItem) {
     statItem.classList.remove('stat-flash');
     void statItem.offsetWidth;
@@ -663,17 +663,17 @@ function animateNumber(elId, newText) {
 
 // ─── Sparkline ───────────────────────────────────────────────
 function renderSparkline(data) {
-  var el = $('sparkline');
+  const el = $('sparkline');
   if (!el || data.length < 2) return;
-  var w = 260, h = 28;
-  var min = Math.min.apply(null, data), max = Math.max.apply(null, data);
-  var range = max - min || 1;
-  var pts = data.map(function(v, i) {
-    var x = (i / (data.length - 1)) * w;
-    var y = h - ((v - min) / range) * (h - 4) - 2;
+  const w = 260, h = 28;
+  const min = Math.min.apply(null, data), max = Math.max.apply(null, data);
+  const range = max - min || 1;
+  const pts = data.map(function(v, i) {
+    const x = (i / (data.length - 1)) * w;
+    const y = h - ((v - min) / range) * (h - 4) - 2;
     return x + ',' + y;
   }).join(' ');
-  var lastY = h - ((data[data.length - 1] - min) / range) * (h - 4) - 2;
+  const lastY = h - ((data[data.length - 1] - min) / range) * (h - 4) - 2;
   el.innerHTML = '<polyline points="' + pts + '" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
     '<circle cx="' + w + '" cy="' + lastY + '" r="3" fill="var(--accent)"/>';
 }
@@ -688,21 +688,21 @@ function doSearch(query) {
     return;
   }
 
-  var found = allFlights.find(function(f) {
-    var cs = (f[IDX.CALLSIGN] || '').trim().toUpperCase();
+  const found = allFlights.find(function(f) {
+    const cs = (f[IDX.CALLSIGN] || '').trim().toUpperCase();
     return cs === query || cs.startsWith(query);
   });
 
   if (found) {
-    var lat = found[IDX.LAT];
-    var lon = found[IDX.LON];
-    var cs  = (found[IDX.CALLSIGN] || '').trim() || found[IDX.ICAO24] || '?';
+    const lat = found[IDX.LAT];
+    const lon = found[IDX.LON];
+    const cs  = (found[IDX.CALLSIGN] || '').trim() || found[IDX.ICAO24] || '?';
 
     if (lat != null && lon != null) {
       map.flyTo({ center: [lon, lat], zoom: 7, duration: 1500 });
 
       // Show popup for the found plane
-      var icao24 = found[IDX.ICAO24] || '';
+      const icao24 = found[IDX.ICAO24] || '';
       selectedIcao = icao24;
       rebuildGeoJSON();
 
@@ -719,10 +719,10 @@ function doSearch(query) {
       });
     }
 
-    var alt = found[IDX.BARO_ALT] != null
+    const alt = found[IDX.BARO_ALT] != null
       ? Math.round(found[IDX.BARO_ALT] * 3.28084).toLocaleString() + ' ft'
       : '—';
-    var spd = found[IDX.VELOCITY] != null
+    const spd = found[IDX.VELOCITY] != null
       ? Math.round(found[IDX.VELOCITY] * 3.6).toLocaleString() + ' km/h'
       : '—';
 
@@ -736,23 +736,23 @@ function doSearch(query) {
 
 // ─── Haversine Distance ──────────────────────────────────────
 function haversine(lat1, lon1, lat2, lon2) {
-  var toRad = function(x) { return x * Math.PI / 180; };
-  var dLat  = toRad(lat2 - lat1);
-  var dLon  = toRad(lon2 - lon1);
-  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+  const toRad = function(x) { return x * Math.PI / 180; };
+  const dLat  = toRad(lat2 - lat1);
+  const dLon  = toRad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
           Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
   return EARTH_RADIUS_KM * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
 // ─── Cardinal Bearing ────────────────────────────────────────
 function bearing(lat1, lon1, lat2, lon2) {
-  var toRad = function(x) { return x * Math.PI / 180; };
-  var dLon  = toRad(lon2 - lon1);
-  var y     = Math.sin(dLon) * Math.cos(toRad(lat2));
-  var x     = Math.cos(toRad(lat1)) * Math.sin(toRad(lat2))
+  const toRad = function(x) { return x * Math.PI / 180; };
+  const dLon  = toRad(lon2 - lon1);
+  const y     = Math.sin(dLon) * Math.cos(toRad(lat2));
+  const x     = Math.cos(toRad(lat1)) * Math.sin(toRad(lat2))
             - Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(dLon);
-  var brng  = (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
-  var dirs  = ['N','NE','E','SE','S','SW','W','NW'];
+  const brng  = (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+  const dirs  = ['N','NE','E','SE','S','SW','W','NW'];
   return dirs[Math.round(brng / 45) % 8];
 }
 
@@ -770,10 +770,10 @@ async function findNearMe() {
 
   navigator.geolocation.getCurrentPosition(
     async function(pos) {
-      var userLat = pos.coords.latitude;
-      var userLon = pos.coords.longitude;
+      const userLat = pos.coords.latitude;
+      const userLon = pos.coords.longitude;
 
-      var bbox = {
+      const bbox = {
         lamin: userLat - NEAR_ME_DEGREES,
         lomin: userLon - NEAR_ME_DEGREES,
         lamax: userLat + NEAR_ME_DEGREES,
@@ -783,7 +783,7 @@ async function findNearMe() {
       nearmeBtn.textContent = 'Fetching nearby…';
 
       try {
-        var states = await fetchFlights(bbox);
+        const states = await fetchFlights(bbox);
 
         if (!states || !states.length) {
           nearmeResult.innerHTML = '<div style="color:var(--text-muted);font-size:0.82rem;">No flights found in your area right now.</div>';
@@ -793,7 +793,7 @@ async function findNearMe() {
           return;
         }
 
-        var nearby = states
+        const nearby = states
           .filter(function(f) { return !f[IDX.ON_GROUND] && f[IDX.LAT] != null && f[IDX.LON] != null; })
           .map(function(f) {
             return {
@@ -809,13 +809,13 @@ async function findNearMe() {
         if (!nearby.length) {
           nearmeResult.innerHTML = '<div style="color:var(--text-muted);font-size:0.82rem;">No airborne flights within 200 km of you right now.</div>';
         } else {
-          var items = nearby.map(function(item) {
-            var f = item.flight, dist = item.dist, dir = item.dir;
-            var cs  = (f[IDX.CALLSIGN] || '').trim() || f[IDX.ICAO24] || '?';
-            var alt = f[IDX.BARO_ALT] != null
+          const items = nearby.map(function(item) {
+            const f = item.flight, dist = item.dist, dir = item.dir;
+            const cs  = (f[IDX.CALLSIGN] || '').trim() || f[IDX.ICAO24] || '?';
+            const alt = f[IDX.BARO_ALT] != null
               ? Math.round(f[IDX.BARO_ALT] * 3.28084).toLocaleString() + ' ft'
               : '—';
-            var spd = f[IDX.VELOCITY] != null
+            const spd = f[IDX.VELOCITY] != null
               ? Math.round(f[IDX.VELOCITY] * 3.6).toLocaleString() + ' km/h'
               : '—';
             return '<div class="nearme-item">' +
@@ -835,7 +835,7 @@ async function findNearMe() {
 
         // Add user location marker
         if (userMarker) userMarker.remove();
-        var el = document.createElement('div');
+        const el = document.createElement('div');
         el.style.cssText = 'width:14px;height:14px;border-radius:50%;background:#00ff9d;border:2px solid #fff;box-shadow:0 0 12px #00ff9d;';
         userMarker = new maplibregl.Marker({ element: el })
           .setLngLat([userLon, userLat])
@@ -851,7 +851,7 @@ async function findNearMe() {
       nearmeBtn.textContent = 'Planes Near Me 📡';
     },
     function(err) {
-      var msgs = {
+      const msgs = {
         1: 'Location permission denied. Please allow location access.',
         2: 'Location unavailable. Try again.',
         3: 'Location request timed out.',
@@ -873,7 +873,7 @@ function showNearmeError(msg) {
 
 // ─── Leaderboard collapse toggle ─────────────────────────────
 lbToggle.addEventListener('click', function() {
-  var collapsed = lbContent.classList.toggle('collapsed');
+  const collapsed = lbContent.classList.toggle('collapsed');
   lbToggle.textContent    = collapsed ? '▼' : '▲';
   lbToggle.setAttribute('aria-expanded', String(!collapsed));
 });
@@ -916,10 +916,10 @@ document.addEventListener('click', function(e) {
 
 // ─── Radar Sweep Decoration ──────────────────────────────────
 function initRadarSweep() {
-  var canvas = $('radar-sweep');
+  const canvas = $('radar-sweep');
   if (!canvas) return;
-  var ctx = canvas.getContext('2d');
-  var angle = 0;
+  const ctx = canvas.getContext('2d');
+  let angle = 0;
 
   function resize() {
     canvas.width  = canvas.offsetWidth;
@@ -930,12 +930,12 @@ function initRadarSweep() {
 
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    var cx = canvas.width / 2, cy = canvas.height / 2;
-    var r  = Math.max(cx, cy) * 1.4;
+    const cx = canvas.width / 2, cy = canvas.height / 2;
+    const r  = Math.max(cx, cy) * 1.4;
     ctx.save();
     ctx.translate(cx, cy);
     ctx.rotate(angle);
-    var sweep = ctx.createRadialGradient(0, 0, 0, 0, 0, r);
+    const sweep = ctx.createRadialGradient(0, 0, 0, 0, 0, r);
     sweep.addColorStop(0,   'rgba(57,255,20,0.5)');
     sweep.addColorStop(0.6, 'rgba(57,255,20,0.1)');
     sweep.addColorStop(1,   'rgba(57,255,20,0)');
